@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Recent activity</h2>
+
+<h3>Recent orders</h3>
+<table>
+  <tr><th>ID</th><th>Listing</th><th>Buyer</th><th>Status</th><th>Date</th></tr>
+  {% for order in recent_orders %}
+    <tr>
+      <td>{{ order.id }}</td>
+      <td>{{ order.listing.title }}</td>
+      <td>{{ order.buyer.username }}</td>
+      <td><span class="badge badge-{{ order.status }}">{{ order.status }}</span></td>
+      <td>{{ order.created_at.strftime('%d %b %Y %H:%M') }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+<h3>Recent listings</h3>
+<table>
+  <tr><th>ID</th><th>Title</th><th>Farmer</th><th>Date</th></tr>
+  {% for listing in recent_listings %}
+    <tr>
+      <td>{{ listing.id }}</td>
+      <td>{{ listing.title }}</td>
+      <td>{{ listing.farmer.username }}</td>
+      <td>{{ listing.created_at.strftime('%d %b %Y %H:%M') }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

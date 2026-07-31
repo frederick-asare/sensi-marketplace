@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Manage users</h2>
+<table>
+  <tr><th>ID</th><th>Username</th><th>Role</th><th>Action</th></tr>
+  {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.role }}</td>
+      <td>
+        {% if user.id != current_user.id %}
+          <form method="post" action="{{ url_for('admin_delete_user', user_id=user.id) }}"
+                onsubmit="return confirm('Delete this user and their listings/orders?');" style="display:inline;">
+            <button type="submit" class="btn-danger">Delete</button>
+          </form>
+        {% else %}
+          (you)
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

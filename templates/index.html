@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+  <h2>Fresh produce, straight from the farm</h2>
+  <p>Browse listings from local farmers or post your own harvest for buyers to find.</p>
+</div>
+
+<form method="get" class="search-bar">
+  <input type="text" name="crop_type" placeholder="Crop type (e.g. maize)" value="{{ crop_type }}">
+  <input type="text" name="location" placeholder="Location (e.g. Kumasi)" value="{{ location }}">
+  <input type="number" step="0.01" name="max_price" placeholder="Max price (GHS)" value="{{ max_price }}">
+  <button type="submit">Search</button>
+</form>
+
+{% if listings %}
+  {% for listing in listings %}
+    <div class="listing">
+      <h3>{{ listing.title }}</h3>
+      <span class="price-tag">GHS {{ "%.2f"|format(listing.price) }}</span>
+      <div class="meta">
+        {% if listing.crop_type %}<span>🌱 {{ listing.crop_type }}</span>{% endif %}
+        {% if listing.quantity %}<span>⚖️ {{ listing.quantity }}</span>{% endif %}
+        {% if listing.location %}<span>📍 {{ listing.location }}</span>{% endif %}
+      </div>
+      {% if listing.image_filename %}
+        <img src="{{ url_for('uploaded_file', filename=listing.image_filename) }}" alt="{{ listing.title }}">
+      {% endif %}
+      <p>{{ listing.description }}</p>
+      <small>Listed by {{ listing.farmer.username }} on {{ listing.created_at.strftime('%d %b %Y') }}</small>
+
+      {% if current_user.is_authenticated and current_user.id != listing.farmer_id %}
+        <form method="post" action="{{ url_for('express_interest', listing_id=listing.id) }}" style="margin-top:14px;">
+          <textarea name="message" rows="2" placeholder="Optional message to the farmer"></textarea>
+          <button type="submit">I'm interested</button>
+        </form>
+      {% endif %}
+    </div>
+  {% endfor %}
+{% else %}
+  <p>No listings match your search.</p>
+{% endif %}
+{% endblock %}

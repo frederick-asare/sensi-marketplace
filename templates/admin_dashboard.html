@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin dashboard</h2>
+<p>
+  <a href="{{ url_for('admin_users') }}" class="btn">Manage users ({{ user_count }})</a>
+  <a href="{{ url_for('admin_listings') }}" class="btn">Manage listings ({{ listing_count }})</a>
+  <a href="{{ url_for('admin_logs') }}" class="btn btn-secondary">View logs ({{ order_count }} orders)</a>
+</p>
+{% endblock %}

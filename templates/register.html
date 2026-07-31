@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Create an account</h2>
+<form method="post">
+  <label>Username</label>
+  <input type="text" name="username" required>
+
+  <label>Password</label>
+  <input type="password" name="password" required>
+
+  <label>I am a</label>
+  <select name="role">
+    <option value="farmer">Farmer (selling)</option>
+    <option value="buyer">Buyer</option>
+  </select>
+
+  <button type="submit">Register</button>
+</form>
+{% endblock %}

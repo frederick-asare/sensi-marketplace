@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+{% if current_user.role == 'farmer' %}
+  <h2>Orders on your listings</h2>
+{% else %}
+  <h2>Your orders</h2>
+{% endif %}
+
+{% if orders %}
+  <table>
+    <tr>
+      <th>Listing</th>
+      {% if current_user.role == 'farmer' %}<th>Buyer</th>{% else %}<th>Farmer</th>{% endif %}
+      <th>Message</th>
+      <th>Status</th>
+      <th>Date</th>
+      {% if current_user.role == 'farmer' %}<th>Action</th>{% endif %}
+    </tr>
+    {% for order in orders %}
+      <tr>
+        <td>{{ order.listing.title }}</td>
+        {% if current_user.role == 'farmer' %}
+          <td>{{ order.buyer.username }}</td>
+        {% else %}
+          <td>{{ order.listing.farmer.username }}</td>
+        {% endif %}
+        <td>{{ order.message or '—' }}</td>
+        <td><span class="badge badge-{{ order.status }}">{{ order.status }}</span></td>
+        <td>{{ order.created_at.strftime('%d %b %Y') }}</td>
+        {% if current_user.role == 'farmer' %}
+          <td>
+            {% if order.status == 'pending' %}
+              <form method="post" action="{{ url_for('update_order_status', order_id=order.id) }}" style="display:inline;">
+                <input type="hidden" name="status" value="accepted">
+                <button type="submit">Accept</button>
+              </form>
+              <form method="post" action="{{ url_for('update_order_status', order_id=order.id) }}" style="display:inline;">
+                <input type="hidden" name="status" value="declined">
+                <button type="submit" class="btn-danger">Decline</button>
+              </form>
+            {% endif %}
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>No orders yet.</p>
+{% endif %}
+{% endblock %}

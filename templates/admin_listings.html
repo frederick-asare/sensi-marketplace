@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Manage listings</h2>
+<table>
+  <tr><th>ID</th><th>Title</th><th>Farmer</th><th>Price</th><th>Date</th><th>Action</th></tr>
+  {% for listing in listings %}
+    <tr>
+      <td>{{ listing.id }}</td>
+      <td>{{ listing.title }}</td>
+      <td>{{ listing.farmer.username }}</td>
+      <td>GHS {{ "%.2f"|format(listing.price) }}</td>
+      <td>{{ listing.created_at.strftime('%d %b %Y') }}</td>
+      <td>
+        <form method="post" action="{{ url_for('admin_delete_listing', listing_id=listing.id) }}"
+              onsubmit="return confirm('Remove this listing?');" style="display:inline;">
+          <button type="submit" class="btn-danger">Remove</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}
